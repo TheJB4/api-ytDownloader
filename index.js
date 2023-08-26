@@ -31,7 +31,10 @@ app.get('/infoVideo',async (req,res)=>{
     let info = await ytdl.getInfo(urlVideo);
     //let fileName = formattFile(info.videoDetails.title)
     console.log(info.videoDetails)
-
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    
     res.json(info.videoDetails)
 })
 
@@ -43,9 +46,15 @@ app.get('/generateLink/mp3',async (req,res) => {
         .on('data',(chunk) => {
             console.log(chunk.toString('utf8'))
             //file += chunk
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.write(chunk)
         })
         .on('end',()=>{
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.end('Terminated')
             //res.status(200).json({"fileName":fileName,"lenghtFile":lenghtFile})
             //res.status(200).json({})
@@ -84,10 +93,16 @@ app.get('/generateLink/Mp4',async (req,res) =>{
         ytdl(urlVideo,{filter: (format) => format.quality = 'hd720'})
         .on('data',(chunk)=>{
             console.log(chunk,'utf-8')
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.write(chunk)
         })
         .on('end',()=>{
             console.log('Video Download')
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.end('Donwloand')
         })
     }catch(err){
