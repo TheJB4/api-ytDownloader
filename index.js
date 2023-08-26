@@ -6,9 +6,13 @@ import fs from 'fs'
 import express from 'express'
 import morgan from 'morgan'
 
+import 'dotenv/config'
+
+
 
 let app = express();
 import formattFile from './utils/formattingFileName.js';
+import { env } from 'process';
 
 app.use(morgan('dev'))
 app.use(cors())
@@ -42,19 +46,16 @@ app.get('/generateLink/mp3',async (req,res) => {
     try{
         let {urlVideo} = req.query
 
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
         ytdl(urlVideo,{filter:'audioonly',quality:'highestaudio'})
         .on('data',(chunk) => {
             console.log(chunk.toString('utf8'))
             //file += chunk
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.write(chunk)
         })
         .on('end',()=>{
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.end('Terminated')
             //res.status(200).json({"fileName":fileName,"lenghtFile":lenghtFile})
             //res.status(200).json({})
@@ -74,6 +75,7 @@ app.get('/generateLink/Mp4',async (req,res) =>{
         let {urlVideo,quality} = req.query
         let qualityReal;
 
+        
         console.log(quality)
 
         switch (quality) {
@@ -90,19 +92,17 @@ app.get('/generateLink/Mp4',async (req,res) =>{
                 break;
         }
 
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
         ytdl(urlVideo,{filter: (format) => format.quality = 'hd720'})
         .on('data',(chunk)=>{
             console.log(chunk,'utf-8')
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.write(chunk)
         })
         .on('end',()=>{
             console.log('Video Download')
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
             res.end('Donwloand')
         })
     }catch(err){
@@ -110,6 +110,6 @@ app.get('/generateLink/Mp4',async (req,res) =>{
     }
 })
 
-app.listen(3000,()=>{
-    console.log('Server running in port 3000')
+app.listen(process.env.PORT,()=>{
+    console.log('Server running in port',process.env.PORT)
 })
